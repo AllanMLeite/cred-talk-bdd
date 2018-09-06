@@ -23,18 +23,6 @@ public class PassosParaListarUsuario implements cucumber.api.java8.Pt {
 			usuarioService.removerTodos();
 		});
 
-		Quando("^buscar usuarios$", () -> {
-			try {
-				usuarios = usuarioService.listarTodos(cpfPesquisa);
-			} catch (Exception e) {
-				mensagemErro = e.getMessage();
-			}
-		});
-
-		Entao("^exibe \"([^\"]*)\"$", (String mensagemEsperada) -> {
-			assertEquals(mensagemEsperada, mensagemErro);
-		});
-
 		Dado("^que exista um usuario \"([^\"]*)\" com cpf \"([^\"]*)\"$", (String nome, String cpf) -> {
 			Usuario usuario = new Usuario();
 			usuario.setNome(nome);
@@ -46,8 +34,20 @@ public class PassosParaListarUsuario implements cucumber.api.java8.Pt {
 			cpfPesquisa = cpf;
 		});
 
+		Quando("^buscar usuarios$", () -> {
+			try {
+				usuarios = usuarioService.listarTodos(cpfPesquisa);
+			} catch (Exception e) {
+				mensagemErro = e.getMessage();
+			}
+		});
+
+		Entao("^exibe \"([^\"]*)\"$", (String mensagemEsperada) -> {
+			assertEquals("Não deveria ter usuários cadastrados.", mensagemEsperada, mensagemErro);
+		});
+
 		Entao("^retorna o usuario \"([^\"]*)\"$", (String nome) -> {
-			assertEquals(nome, usuarios.get(0).getNome());
+			assertEquals("Nome do usuário encontrado é diferente do nome esperado.", nome, usuarios.get(0).getNome());
 		});
 
 	}
